@@ -7,14 +7,20 @@ public class SingleLinkedListDemo1 {
         HeroNode heroNode1 = new HeroNode(1, "宋江", "及时雨");
         HeroNode heroNode2 = new HeroNode(2, "卢俊义", "玉麒麟");
         HeroNode heroNode3 = new HeroNode(3, "吴用", "智多星");
-        HeroNode heroNode4 = new HeroNode(3, "林冲", "豹子头");
+        HeroNode heroNode4 = new HeroNode(4, "林冲", "豹子头");
         SingleLinkedList linkedList = new SingleLinkedList();
-        linkedList.add(heroNode1);
-        linkedList.add(heroNode2);
-        linkedList.add(heroNode3);
-        linkedList.add(heroNode4);
+//        linkedList.add(heroNode1);
+//        linkedList.add(heroNode2);
+//        linkedList.add(heroNode3);
+//        linkedList.add(heroNode4);
+        linkedList.addOrderByNo(heroNode1);
+        linkedList.addOrderByNo(heroNode3);
+        linkedList.addOrderByNo(heroNode2);
+        linkedList.addOrderByNo(heroNode4);
 
         linkedList.list();
+
+
     }
 }
 
@@ -41,6 +47,41 @@ class SingleLinkedList {
         }
         //当退出while循环时，temp就指向链表的最后
         temp.next = heroNode;
+    }
+
+    //添加英雄时，根据排名将英雄插入指定位置
+    //如果有这个排名，则添加失败，并给出提示
+    public void addOrderByNo(HeroNode heroNode) {
+        //因为头结点不能动，因为我们通过一个辅助指针来帮助找到添加的位置
+        //因为是单链表，因此我们找的temp是位于添加位置的前一个节点，否则插入不了
+        HeroNode temp = head;
+        //标识添加的标号是否存在，默认为false
+        boolean flag = false;
+        while (true) {
+            //说明temp已经在链表的最后
+            if (temp.next == null) {
+                break;
+            }
+            //位置找到了,就在temp的后面插入
+            if (temp.next.no > heroNode.no) {
+                break;
+            }
+            if (temp.next.no == heroNode.no) {
+                flag = true;
+                break;
+            }
+            temp = temp.next;
+        }
+        if (flag) {
+            throw new RuntimeException("英雄编号已存在，请检查！");
+        }
+        if (temp.next == null) {
+            temp.next = heroNode;
+        }else {
+            HeroNode old = temp.next;
+            temp.next = heroNode;
+            heroNode.next = old;
+        }
     }
 
     //显示链表
